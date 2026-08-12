@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import { User } from './models/User';
 import { Team } from './models/Team';
 import { Activity } from './models/Activity';
@@ -11,39 +10,17 @@ import { Workout } from './models/Workout';
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 8000; 
-const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
-
-// Codespaces-aware API URL support
-const getApiUrl = (): string => {
-  if (process.env.CODESPACE_NAME) {
-    return `https://${process.env.CODESPACE_NAME}-${port}.app.github.dev`;
-  }
-  return `http://localhost:${port}`;
-};
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB Connection
-const connectDB = async () => {
-  try {
-    await mongoose.connect(mongodbUri);
-    console.log('✓ MongoDB connected successfully');
-  } catch (error) {
-    console.error('✗ MongoDB connection failed:', error);
-    process.exit(1);
-  }
-};
-
 // Routes
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ 
     status: 'OK', 
-    message: 'OctoFit Tracker API is running',
-    apiUrl: getApiUrl()
+    message: 'OctoFit Tracker API is running'
   });
 });
 
@@ -251,15 +228,5 @@ app.get('/api/workouts/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Start Server
-const startServer = async () => {
-  await connectDB();
-  
-  app.listen(port, () => {
-    console.log(`\n✓ OctoFit Tracker Backend Server running on ${getApiUrl()}`);
-    console.log(`✓ Environment: ${process.env.NODE_ENV}`);
-    console.log(`✓ MongoDB URI: ${mongodbUri}\n`);
-  });
-};
-
-startServer();
+// Export app for use in server.ts
+export default app;
