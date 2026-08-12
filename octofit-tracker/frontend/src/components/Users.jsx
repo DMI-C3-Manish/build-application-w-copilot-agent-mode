@@ -5,12 +5,14 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const codespaceApiUrl = `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`;
+  const fallbackApiUrl = 'http://localhost:8000/api/users/';
 
   useEffect(() => {
     const loadUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${getApiBaseUrl()}/users/`);
+        const response = await fetch(import.meta.env.VITE_CODESPACE_NAME ? codespaceApiUrl : fallbackApiUrl);
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`);

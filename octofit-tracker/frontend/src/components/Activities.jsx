@@ -5,12 +5,14 @@ function Activities() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const codespaceApiUrl = `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/activities/`;
+  const fallbackApiUrl = 'http://localhost:8000/api/activities/';
 
   useEffect(() => {
     const loadActivities = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${getApiBaseUrl()}/activities/`);
+        const response = await fetch(import.meta.env.VITE_CODESPACE_NAME ? codespaceApiUrl : fallbackApiUrl);
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`);
