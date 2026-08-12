@@ -11,7 +11,7 @@ import { Workout } from './models/Workout';
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8000; 
 const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
 // Codespaces-aware API URL support
